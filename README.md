@@ -1,4 +1,4 @@
-# GGE Sovereign App
+# Ví Thông Minh - Quản Trị Thu Chi & Ngân Sách Cá Nhân
 
 Ứng dụng được tạo bởi Gemini Genesis Engine.
 
@@ -10,4 +10,4 @@ Render sẽ hỏi biến `ENROLL_CODE`: dán mã ghi danh lấy từ trang xư�
 ## Tệp trong kho
 - `public/`: giao diện, biểu tượng, chế độ offline
 - `server.py`: máy chủ nhỏ phục vụ ứng dụng
-- `render.yaml`: cấu hình triển khai (tắt tự động cập nhật)
+- `render.yaml`: cấu hình triển khai (tự cập nhật khi chủ ứng dụng bấm cập nhật)
