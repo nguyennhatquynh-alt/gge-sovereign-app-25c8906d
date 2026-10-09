@@ -26,7 +26,7 @@ APP_KEY = os.getenv("APP_KEY", "").strip()
 ENROLL_CODE = os.getenv("ENROLL_CODE", "").strip()
 _CAP_RE = re.compile(r"^[A-Za-z0-9_-]{1,64}$")
 _MAX_VALUE_BYTES = 60000
-_STATE = {"enrolled": False}
+_STATE = {"enrolled": False, "why": ""}
 _OWNER = {"t": 0.0, "hashes": None}
 _PAIRS = {}
 _JOIN_FAILS = []
@@ -61,18 +61,29 @@ def _ensure_enrolled():
     if _STATE["enrolled"]:
         return True
     if not (MOTHER and APP_ID and APP_KEY):
+        _STATE["why"] = "no_config"
         return False
     code, _ = _mother("GET", "/api/v1/tenant/data/ping")
     if code == 200:
         _STATE["enrolled"] = True
+        _STATE["why"] = ""
         return True
-    if code == 0 or not ENROLL_CODE:
+    if code == 0:
+        _STATE["why"] = "mother_down"
+        return False
+    if code == 503:
+        _STATE["why"] = "zone"
+        return False
+    if not ENROLL_CODE:
+        _STATE["why"] = "no_code"
         return False
     code, _ = _mother("POST", "/api/v1/tenant/enroll",
                       {"app_id": APP_ID, "enroll_code": ENROLL_CODE, "app_key": APP_KEY})
     if code == 200:
         _STATE["enrolled"] = True
+        _STATE["why"] = ""
         return True
+    _STATE["why"] = "zone" if code in (0, 503) else "bad_code"
     return False
 
 
@@ -239,6 +250,12 @@ async def delete_record(record_id: int):
         rows = [r for r in _load() if r.get("id") != record_id]
         _save(rows)
     return {"status": "SUCCESS"}
+
+
+@app.get("/api/sync/status")
+async def sync_status():
+    ok = await asyncio.to_thread(_ensure_enrolled)
+    return {"enrolled": bool(ok), "why": "" if ok else _STATE.get("why", "")}
 
 
 # ---------- Chủ sở hữu và liên kết thiết bị ----------
