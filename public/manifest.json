@@ -1,7 +1,7 @@
 {
-  "name": "GGE Sovereign App",
-  "short_name": "GGE",
-  "description": "Ứng dụng của bạn.",
+  "name": "Ví Thông Minh - Quản Trị Thu Chi & Ngân Sách Cá Nhân",
+  "short_name": "Ví Thông",
+  "description": "Nền tảng số hóa quản lý tài chính cá nhân tinh gọn, giúp theo dõi dòng tiền thu chi hàng ngày tức thì, phân bổ định mức ngân sách linh hoạt theo danh mục và trực quan hóa sức khỏe tài chính bằng biểu đồ dòng tiền tự động.",
   "start_url": "/",
   "id": "/",
   "scope": "/",
